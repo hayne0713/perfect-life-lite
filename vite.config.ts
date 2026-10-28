@@ -12,13 +12,13 @@ export default defineConfig(({ mode }) => ({
       manifest: {
         name: 'Perfect Life Lite',
         short_name: 'Perfect Life',
-        description: '簡單記下每天的睡眠、任務與飲食。',
+        description: '記錄活動、睡眠、飲食與每日提醒。',
         lang: 'zh-TW',
         start_url: './',
         scope: './',
         display: 'standalone',
-        background_color: '#f7f7f2',
-        theme_color: '#f7f7f2',
+        background_color: '#f5f6f1',
+        theme_color: '#f5f6f1',
         icons: [
           { src: 'pwa-192.svg', sizes: '192x192', type: 'image/svg+xml', purpose: 'any maskable' },
           { src: 'pwa-512.svg', sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' },
