@@ -1,36 +1,36 @@
-# Spec Delta
+# 規格差異
 
-## Purpose
+## 目的
 
-Let the user retain control of their local-first life records by exporting and restoring a complete portable backup, including newly added activity and reminder data.
+讓使用者能掌控僅存於本機的生活紀錄，匯出並還原完整、可攜的備份，其中包含新增的活動與提醒資料。
 
-## ADDED Requirements
+## 新增需求
 
-### Requirement: Export all local records
-The system SHALL export sleep intervals, activity sessions, dated reminders, meal descriptions, and meal photos in a versioned JSON backup.
+### 需求：匯出所有本機紀錄
+系統必須將睡眠時段、活動時段、日期提醒、餐點說明與餐點照片匯出為具版本資訊的 JSON 備份。
 
-#### Scenario: Export a complete backup
-- **WHEN** the user requests an export
-- **THEN** the downloaded JSON contains all supported record categories and embedded meal photos
+#### 情境：匯出完整備份
+- **當** 使用者要求匯出
+- **則** 下載的 JSON 會包含所有支援的紀錄類別與內嵌的餐點照片
 
-### Requirement: Restore supported backup versions
-The system SHALL validate an imported backup before replacing local data and SHALL support both the existing version 1 format and the new versioned format.
+### 需求：還原支援的備份版本
+系統必須在取代本機資料前驗證匯入檔案，並支援現有第 1 版格式與新版格式。
 
-#### Scenario: Import an existing version 1 backup
-- **WHEN** the user confirms importing a valid version 1 backup
-- **THEN** the system restores the existing sleep, task, and meal records and initializes new record categories as empty
+#### 情境：匯入現有第 1 版備份
+- **當** 使用者確認匯入有效的第 1 版備份
+- **則** 系統會還原既有的睡眠、任務與餐點紀錄，並將新增的紀錄類別初始化為空
 
-#### Scenario: Import a new version backup
-- **WHEN** the user confirms importing a valid current-version backup
-- **THEN** the system restores all record categories, including meal photos
+#### 情境：匯入新版備份
+- **當** 使用者確認匯入有效的目前版本備份
+- **則** 系統會還原所有紀錄類別，包括餐點照片
 
-#### Scenario: Reject an invalid or unsupported backup
-- **WHEN** an imported file has an unsupported version or invalid record data
-- **THEN** the system leaves existing local data unchanged and explains that the backup could not be restored
+#### 情境：拒絕無效或不支援的備份
+- **當** 匯入檔案的版本不受支援，或紀錄資料無效
+- **則** 系統會維持現有本機資料不變，並說明無法還原該備份
 
-### Requirement: Confirm before replacing local data
-The system SHALL ask for confirmation before an import replaces existing local records.
+### 需求：取代本機資料前先確認
+系統在匯入會取代現有本機紀錄的檔案前，必須先詢問使用者是否確認。
 
-#### Scenario: Cancel an import
-- **WHEN** the user declines the import confirmation
-- **THEN** the system leaves all existing local data unchanged
+#### 情境：取消匯入
+- **當** 使用者拒絕匯入確認
+- **則** 系統會讓所有現有本機資料維持不變

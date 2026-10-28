@@ -1,32 +1,33 @@
-# Proposal
+# 提案
 
-## Why
+## 為什麼
 
-Perfect Life Lite currently records sleep, manually entered daily tasks, and meals, but its single-screen structure makes it hard to grow into the personal life notebook the owner wants. The next version should make it easy to record what is actually happening throughout the day, remember future commitments, and review past days without relying on background execution or cloud services.
+Perfect Life Lite 目前可記錄睡眠、手動輸入的每日任務與餐點，但單一畫面的結構不利於擴充成使用者想要的個人生活手帳。下一版應讓使用者能輕鬆記下白天實際進行的事、記住未來要辦的事項，並回顧過去的日子；整個過程不依賴背景執行或雲端服務。
 
-## What Changes
+## 變更內容
 
-- Add timestamp-based activity sessions: enter any activity name and start; starting another activity ends the current one; repeated sessions with the same name contribute to that day's total. Rest may be tracked as an activity or left as an unrecorded gap.
-- Add start/stop sleep recording while preserving manual correction of past times.
-- Change daily tasks into date-based reminders that appear in the app on their due date; do not add background notifications.
-- Add a month calendar for direct date selection with small indicators for days containing records.
-- Reorganize the app into feature-oriented modules so activity tracking, sleep, reminders, meals, calendar, and shared persistence can evolve independently.
-- Keep all records local in IndexedDB and include new records in JSON export/import, preserving support for existing version 1 backups.
-- Keep existing meal logging, photo storage, PWA installation, and offline use.
+- 新增以時間戳記為基礎的活動時段：輸入任意活動名稱並開始記錄；開始另一項活動時會結束目前時段；同名的多段活動會合併計入當日總時間。休息可以記錄為活動，也可以留白不記錄。
+- 新增睡眠開始／結束記錄，同時保留手動修正過去時間的功能。
+- 將每日任務改為依日期安排的提醒，並在到期日於 App 內顯示；不新增背景通知。
+- 新增月曆，方便直接選擇日期，並以小型指示標記有紀錄的日期。
+- 將 App 重整為依功能劃分的模組，讓活動追蹤、睡眠、提醒、餐點、月曆與共用資料持久化邏輯可各自演進。
+- 所有紀錄仍儲存在本機 IndexedDB，並納入 JSON 匯出／匯入；同時保留對現有第 1 版備份的支援。
+- 保留既有餐點記錄、照片儲存、PWA 安裝與離線使用功能。
 
-## Capabilities
+## 功能範疇
 
-### New Capabilities
-- `activity-tracking`: Record and review timestamped activity sessions and totals.
-- `dated-reminders`: Create and complete tasks associated with a selected due date, surfaced inside the app.
-- `life-calendar`: Navigate by month and select dates with record indicators.
-- `sleep-tracking`: Record sleep with start/stop controls while retaining editable historical intervals.
-- `data-backup`: Back up and restore all local records, including new activity and reminder data.
+### 新增功能
 
-## Impact
+- `activity-tracking`：記錄並檢視含時間戳記的活動時段與時間總計。
+- `dated-reminders`：建立與指定日期關聯的任務，並在 App 內顯示及完成。
+- `life-calendar`：按月份瀏覽日期，並以指示標記有紀錄的日期。
+- `sleep-tracking`：記錄睡眠開始與結束時間，同時保留編輯歷史時段的功能。
+- `data-backup`：備份及還原所有本機紀錄，包括新增的活動與提醒資料。
 
-- Affected UI and application structure: `src/App.tsx`, `src/data.ts`, and new feature-focused modules and components.
-- IndexedDB schema will be upgraded to add activity sessions and reminder dates while retaining current sleep and meal data.
-- JSON backup format will advance while accepting version 1 data.
-- No server, account, push notification, or new runtime service is introduced. PWA assets and GitHub Pages deployment remain in place.
-- Standalone free-text journal entries are not included in this change; the activity log covers timed descriptions of what happened. A separate notes feature can be explored later.
+## 影響
+
+- 受影響的 UI 與應用程式結構：`src/App.tsx`、`src/data.ts`，以及新增的功能模組與元件。
+- IndexedDB 結構將升級，以新增活動時段與提醒日期，同時保留現有睡眠與餐點資料。
+- JSON 備份格式將升版，但仍接受第 1 版檔案。
+- 不新增伺服器、帳號、推播通知或執行階段服務。PWA 資產與 GitHub Pages 部署方式維持不變。
+- 不包含獨立的自由文字日記；活動紀錄只用來描述有計時的活動。日後可另外評估筆記功能。

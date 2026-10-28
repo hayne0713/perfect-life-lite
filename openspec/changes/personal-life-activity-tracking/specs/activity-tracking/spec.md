@@ -1,58 +1,58 @@
-# Spec Delta
+# 規格差異
 
-## Purpose
+## 目的
 
-Let the user record what they are doing as it happens, then review the day's activity timeline and time spent without maintaining a predefined activity catalog.
+讓使用者不必維護預設活動目錄，就能即時記錄正在做的事，並回顧當日活動時間軸與時間花費。
 
-## ADDED Requirements
+## 新增需求
 
-### Requirement: Start a free-form activity
-The system SHALL let the user enter an activity name and start recording it immediately.
+### 需求：開始記錄自訂活動
+系統必須允許使用者輸入活動名稱並立即開始記錄。
 
-#### Scenario: Start an activity when none is active
-- **WHEN** the user enters a non-empty activity name and starts it
-- **THEN** the system records a new activity interval beginning at the current time and shows it as active
+#### 情境：目前沒有作用中的活動時開始一項活動
+- **當** 使用者輸入非空白活動名稱並開始記錄
+- **則** 系統會建立一筆以目前時間為開始時間的新活動時段，並顯示該活動正在進行
 
-#### Scenario: Reject an empty activity name
-- **WHEN** the user attempts to start an activity with a blank name
-- **THEN** the system does not create an interval and asks the user to enter a name
+#### 情境：拒絕空白活動名稱
+- **當** 使用者嘗試以空白名稱開始活動
+- **則** 系統不會建立時段，並提示使用者輸入名稱
 
-### Requirement: Keep activity intervals non-overlapping
-The system SHALL allow at most one activity or sleep interval to be active at a time.
+### 需求：活動時段不得重疊
+系統必須限制同一時間最多只有一段活動或睡眠時段處於作用中。
 
-#### Scenario: Switch directly to another activity
-- **WHEN** an activity is active and the user starts a different activity
-- **THEN** the system ends the active interval at the switch time and starts the new interval at that same time
+#### 情境：直接切換到另一項活動
+- **當** 有活動正在進行，而使用者開始另一項活動
+- **則** 系統會在切換時間結束目前時段，並以同一時間開始新活動
 
-#### Scenario: Start an activity while sleep is active
-- **WHEN** sleep recording is active and the user starts an activity
-- **THEN** the system ends the sleep interval at the activity start time and starts the activity
+#### 情境：睡眠進行中時開始活動
+- **當** 睡眠記錄正在進行，而使用者開始一項活動
+- **則** 系統會在活動開始時間結束睡眠時段，並開始記錄活動
 
-### Requirement: Stop an activity and accumulate repeated sessions
-The system SHALL preserve each activity interval and show the combined duration of intervals with the same trimmed name on the same local date.
+### 需求：停止活動並累計重複時段
+系統必須保留每段活動時段，並顯示同一本地日期內名稱去除首尾空白後完全相同的活動總時間。
 
-#### Scenario: Stop the active activity
-- **WHEN** the user ends the active activity
-- **THEN** the system records its end time and includes its elapsed duration in that day's total
+#### 情境：停止作用中的活動
+- **當** 使用者結束作用中的活動
+- **則** 系統會記錄結束時間，並將經過時間納入當日總計
 
-#### Scenario: Repeat an activity later that day
-- **WHEN** the user records another interval with the same activity name on the same local date
-- **THEN** the day view shows both intervals and their combined duration for that name
+#### 情境：同一天稍後再次進行相同活動
+- **當** 使用者在同一本地日期再次記錄名稱相同的活動時段
+- **則** 當日檢視會顯示兩段時段，並列出該活動的合併總時間
 
-### Requirement: Preserve active timer state across app suspension
-The system SHALL preserve the active interval's start time locally and calculate elapsed time from timestamps when the app is reopened or resumed.
+### 需求：App 暫停期間保留計時器狀態
+系統必須在本機保留作用中時段的開始時間，並在 App 重新開啟或恢復時依時間戳記計算經過時間。
 
-#### Scenario: Return to an active timer after leaving the app
-- **WHEN** the app was backgrounded, closed, or suspended while an interval was active
-- **THEN** the active interval remains active and its elapsed time reflects the time since its recorded start
+#### 情境：離開 App 後返回作用中計時器
+- **當** 時段作用中時 App 被移至背景、關閉或暫停
+- **則** 該時段仍保持作用中，且顯示的經過時間會反映自記錄開始以來的時間
 
-### Requirement: Review and correct activity history
-The system SHALL let the user review a selected day's activity intervals in time order and edit or delete an interval.
+### 需求：檢視並修正活動歷史
+系統必須允許使用者依時間順序檢視所選日期的活動時段，並編輯或刪除時段。
 
-#### Scenario: Correct a forgotten or inaccurate interval
-- **WHEN** the user edits an interval's name or start/end time
-- **THEN** the timeline and per-name totals are recalculated from the updated interval
+#### 情境：修正遺漏或不準確的時段
+- **當** 使用者編輯時段名稱或開始／結束時間
+- **則** 系統會依更新後的時段重新計算時間軸與各活動總計
 
-#### Scenario: Leave time unrecorded
-- **WHEN** the user ends an interval without starting another one
-- **THEN** the system leaves the remaining time unrecorded and does not create an implicit activity
+#### 情境：讓一段時間不予記錄
+- **當** 使用者結束一段活動但沒有開始另一項活動
+- **則** 系統會讓剩餘時間保持未記錄，不會自動建立活動

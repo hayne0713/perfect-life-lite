@@ -1,36 +1,36 @@
-# Spec Delta
+# 規格差異
 
-## Purpose
+## 目的
 
-Make sleep logging quick enough for daily use by letting the user start recording before sleep and end it after waking, while preserving correction of historical records.
+讓每日睡眠記錄更方便：使用者可在睡前開始記錄、起床後結束，同時保留修正歷史紀錄的功能。
 
-## ADDED Requirements
+## 新增需求
 
-### Requirement: Start and stop sleep recording
-The system SHALL let the user start a sleep interval and end it when they wake, storing both timestamps locally.
+### 需求：開始與結束睡眠記錄
+系統必須允許使用者開始一段睡眠時段，並在起床時結束，將兩個時間戳記儲存在本機。
 
-#### Scenario: Start sleep recording
-- **WHEN** the user starts sleep recording
-- **THEN** the system saves the start timestamp and shows sleep as active
+#### 情境：開始睡眠記錄
+- **當** 使用者開始睡眠記錄
+- **則** 系統會儲存開始時間戳記，並顯示睡眠記錄正在進行
 
-#### Scenario: End sleep recording after midnight
-- **WHEN** the user ends an active sleep interval on a later date
-- **THEN** the system saves the end timestamp and calculates the elapsed duration across the date boundary
+#### 情境：午夜後結束睡眠記錄
+- **當** 使用者在隔日結束作用中的睡眠時段
+- **則** 系統會儲存結束時間戳記，並計算跨日期的經過時間
 
-### Requirement: Keep sleep timing reliable across app suspension
-The system SHALL retain the saved start timestamp and calculate the current elapsed duration when the app is reopened or resumed.
+### 需求：App 暫停期間維持睡眠計時正確
+系統必須保留已儲存的開始時間戳記，並在 App 重新開啟或恢復時計算目前經過時間。
 
-#### Scenario: Reopen the app while sleep recording is active
-- **WHEN** the app was closed or suspended after sleep recording started
-- **THEN** sleep remains active and displays the time elapsed since its stored start timestamp
+#### 情境：睡眠記錄進行中時重新開啟 App
+- **當** 睡眠記錄開始後 App 曾被關閉或暫停
+- **則** 睡眠記錄仍保持作用中，並顯示自已儲存開始時間起經過的時間
 
-### Requirement: Correct historical sleep intervals
-The system SHALL allow the user to add, edit, or delete sleep intervals and SHALL reject an interval whose end is not after its start.
+### 需求：修正歷史睡眠時段
+系統必須允許使用者新增、編輯或刪除睡眠時段，並拒絕結束時間不晚於開始時間的時段。
 
-#### Scenario: Backfill or correct sleep times
-- **WHEN** the user saves a historical sleep interval with an end after its start
-- **THEN** the system stores the interval and displays its calculated duration
+#### 情境：補登或修正睡眠時間
+- **當** 使用者儲存結束時間晚於開始時間的歷史睡眠時段
+- **則** 系統會儲存該時段並顯示計算後的時長
 
-#### Scenario: Reject invalid sleep times
-- **WHEN** the user saves an interval with an end at or before its start
-- **THEN** the system does not save the interval and explains that the end must be later than the start
+#### 情境：拒絕無效睡眠時間
+- **當** 使用者儲存的時段結束時間等於或早於開始時間
+- **則** 系統不會儲存該時段，並說明結束時間必須晚於開始時間

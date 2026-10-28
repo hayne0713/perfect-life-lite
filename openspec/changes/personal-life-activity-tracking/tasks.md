@@ -1,24 +1,24 @@
-# Tasks
+# 工作項目
 
-## 1. Persistence and feature structure
+## 1. 資料持久化與功能結構
 
-- [x] 1.1 Create feature-oriented app/shared module boundaries and move database setup behind typed data access helpers; verify `npm run build` passes and the current app still loads existing sleep, task, and meal stores.
-- [x] 1.2 Upgrade IndexedDB additively with activity intervals and active sleep support; add focused tests for elapsed-time calculation, local-date grouping, and one-active-interval switching, and verify old version 1 data remains readable.
-- [x] 1.3 Update versioned backup validation/export/import to include activity intervals and reminders while accepting version 1 files; verify valid round trips, legacy import, and invalid-file non-destructive behavior.
+- [x] 1.1 建立以功能為主的 App／共用模組界線，並將資料庫設定移至具型別的資料存取輔助函式後方；確認 `npm run build` 通過，且目前 App 仍能載入既有的睡眠、任務與餐點儲存區。
+- [x] 1.2 以新增方式升級 IndexedDB，加入活動時段與進行中睡眠的支援；新增經過時間計算、本地日期分組及單一作用中時段切換的專項測試，並確認舊版第 1 版資料仍可讀取。
+- [x] 1.3 更新具版本資訊的備份驗證／匯出／匯入，納入活動時段與提醒並接受第 1 版檔案；確認有效資料可往返還原、舊版可匯入，且無效檔案不會破壞資料。
 
-## 2. Timed activity and sleep features
+## 2. 活動與睡眠計時功能
 
-- [x] 2.1 Build the activity timer view for free-form names, active elapsed time, stop/switch behavior, rest entries, and per-day totals; verify switching closes the prior interval at the same timestamp and repeated names aggregate without losing individual intervals.
-- [x] 2.2 Build start/stop sleep controls and preserve historical editing; verify intervals crossing midnight calculate correctly and active timers restore after a page reload.
-- [x] 2.3 Add correction and deletion flows for historical activity intervals; verify edits immediately recalculate timeline ordering and totals.
+- [x] 2.1 建立活動計時檢視，支援自由輸入名稱、顯示作用中經過時間、停止／切換、休息紀錄及每日總計；確認切換時以同一時間點結束前一段，且同名活動會彙總但各時段仍分別保留。
+- [x] 2.2 建立睡眠開始／結束控制，並保留歷史紀錄編輯；確認跨日計算正確，且頁面重新載入後會還原作用中計時。
+- [x] 2.3 新增歷史活動時段的修正與刪除流程；確認編輯後會立即重新計算時間軸順序與總計。
 
-## 3. Dated reminders and calendar
+## 3. 日期提醒與月曆
 
-- [x] 3.1 Replace duration-oriented daily-task UI with date-based reminder create/edit/complete/delete flows and today/overdue display; verify reminders remain separate from activity totals and appear for their due date.
-- [x] 3.2 Build a monthly date picker with month navigation, today shortcut, selected-day state, and category dots; verify markers update after adding or deleting activity, sleep, meal, or reminder records.
+- [x] 3.1 將以時長為主的每日任務 UI 改為依日期建立／編輯／完成／刪除提醒，並顯示今天與逾期提醒；確認提醒與活動總計分開，且會出現在所屬到期日。
+- [x] 3.2 建立月曆日期選擇器，支援月份切換、今天捷徑、所選日期狀態與分類點；確認新增或刪除活動、睡眠、餐點或提醒後，標記會更新。
 
-## 4. Integration and usage guidance
+## 4. 整合與使用說明
 
-- [x] 4.1 Integrate the feature views into a mobile-first home/day review and preserve existing meal logging and photo behavior; verify the production build succeeds and all day views respond to calendar selection.
-- [x] 4.2 Update README with the feature model, local data/backup behavior, Android PWA use, and testing steps; verify documented local commands match `package.json`.
-- [ ] 4.3 Run final build and available automated tests, then manually verify start/switch/stop, app reload with active timer, sleep across midnight, dated reminders, calendar markers, and backup compatibility.
+- [x] 4.1 將各功能檢視整合為以手機為優先的首頁／每日回顧，並保留既有餐點記錄與照片處理行為；確認正式建置成功，且所有每日檢視都會隨月曆所選日期更新。
+- [x] 4.2 更新 README，說明功能模式、本機資料／備份行為、Android PWA 使用方式與測試步驟；確認文件中的本機指令與 `package.json` 相符。
+- [x] 4.3 執行最後建置與可用的自動化測試，然後手動確認開始／切換／停止、作用中計時器在 App 重新載入後的狀態、跨午夜睡眠、日期提醒、月曆標記與備份相容性。

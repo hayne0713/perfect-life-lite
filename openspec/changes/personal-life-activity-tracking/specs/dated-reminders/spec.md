@@ -1,40 +1,40 @@
-# Spec Delta
+# 規格差異
 
-## Purpose
+## 目的
 
-Let the user keep future or past-dated commitments visible in the app, separately from the activity intervals that record what actually happened.
+讓使用者能在 App 內查看未來或過去日期的待辦事項，並使提醒與記錄實際發生情況的活動時段分開。
 
-## ADDED Requirements
+## 新增需求
 
-### Requirement: Create a dated reminder
-The system SHALL let the user create a reminder with a title and a user-selected due date.
+### 需求：建立日期提醒
+系統必須允許使用者建立包含標題與自行選擇到期日的提醒。
 
-#### Scenario: Create a reminder for another day
-- **WHEN** the user enters a title and selects a date
-- **THEN** the system saves the reminder for that date without requiring a duration or activity timer
+#### 情境：建立其他日期的提醒
+- **當** 使用者輸入標題並選擇日期
+- **則** 系統會將提醒儲存於該日期，不要求使用者提供時長或啟動活動計時器
 
-#### Scenario: Reject a blank reminder title
-- **WHEN** the user saves a reminder with a blank title
-- **THEN** the system does not save it and asks the user to enter a title
+#### 情境：拒絕空白提醒標題
+- **當** 使用者以空白標題儲存提醒
+- **則** 系統不會儲存，並提示使用者輸入標題
 
-### Requirement: Review and complete reminders by date
-The system SHALL show reminders for the selected date and allow the user to edit, complete, reopen, or delete each reminder.
+### 需求：依日期檢視並完成提醒
+系統必須顯示所選日期的提醒，並允許使用者編輯、完成、重新開啟或刪除各項提醒。
 
-#### Scenario: Review reminders due today
-- **WHEN** the user opens the home view for today
-- **THEN** the system shows incomplete reminders due today and any earlier incomplete reminders as overdue
+#### 情境：檢視今天到期的提醒
+- **當** 使用者開啟今天的首頁檢視
+- **則** 系統會顯示今天到期且未完成的提醒，以及所有較早到期但尚未完成的逾期提醒
 
-#### Scenario: Review another date
-- **WHEN** the user selects a date in the calendar
-- **THEN** the system shows reminders due on that date
+#### 情境：檢視其他日期
+- **當** 使用者在月曆中選取日期
+- **則** 系統會顯示該日期到期的提醒
 
-#### Scenario: Complete and reopen a reminder
-- **WHEN** the user marks a reminder complete or reopens it
-- **THEN** the system persists the updated state locally and reflects it in the selected date view
+#### 情境：完成並重新開啟提醒
+- **當** 使用者將提醒標記為完成或重新開啟
+- **則** 系統會在本機儲存更新後的狀態，並在所選日期檢視中反映變更
 
-### Requirement: Keep reminders in-app only
-The system SHALL present reminders when the user opens the app and SHALL NOT require or schedule background push notifications.
+### 需求：提醒只在 App 內顯示
+系統必須在使用者開啟 App 時呈現提醒，且不得要求或排程背景推播通知。
 
-#### Scenario: App is not open at the due date
-- **WHEN** a reminder becomes due while the app is closed
-- **THEN** no background notification is sent, and the reminder appears in the app the next time it is opened
+#### 情境：到期時 App 未開啟
+- **當** App 關閉期間有提醒到期
+- **則** 系統不會傳送背景通知；提醒會在 App 下次開啟時顯示

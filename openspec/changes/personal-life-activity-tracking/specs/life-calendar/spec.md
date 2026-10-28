@@ -1,36 +1,36 @@
-# Spec Delta
+# 規格差異
 
-## Purpose
+## 目的
 
-Give the user a month-at-a-glance way to navigate their local life records and dated reminders instead of stepping through dates one day at a time.
+提供月覽方式，讓使用者瀏覽本機生活紀錄與日期提醒，而不必一次只往前或往後移動一天。
 
-## ADDED Requirements
+## 新增需求
 
-### Requirement: Browse and select dates in a monthly calendar
-The system SHALL display a calendar month and let the user move between months and select any date for review or backfilling.
+### 需求：瀏覽並選取月曆日期
+系統必須顯示月曆，並允許使用者切換月份、選取任意日期以檢視或補登紀錄。
 
-#### Scenario: Select a date in the current month
-- **WHEN** the user taps a day cell
-- **THEN** the app selects that date and displays its records and reminders
+#### 情境：選取本月日期
+- **當** 使用者點選日期格
+- **則** App 會選取該日期並顯示該日的紀錄與提醒
 
-#### Scenario: Move to another month
-- **WHEN** the user moves to the previous or next month
-- **THEN** the calendar displays the correct month and its dates
+#### 情境：切換到其他月份
+- **當** 使用者切換到上個月或下個月
+- **則** 月曆會顯示正確月份及其日期
 
-### Requirement: Show record indicators on calendar days
-The system SHALL show small indicators for dates with activity, sleep, meal, or reminder data.
+### 需求：在月曆日期上顯示紀錄標記
+系統必須在有活動、睡眠、餐點或提醒資料的日期上顯示小型標記。
 
-#### Scenario: Inspect dates with different records
-- **WHEN** a month contains days with different categories of data
-- **THEN** each applicable day displays small category indicators that do not prevent selecting the day
+#### 情境：查看含有不同類別紀錄的日期
+- **當** 某個月份中有些日期包含不同類別的資料
+- **則** 各日期會顯示適用的小型分類標記，且標記不會妨礙選取日期
 
-#### Scenario: Refresh indicators after a record changes
-- **WHEN** the user adds, edits, or deletes a record or reminder
-- **THEN** the affected calendar day's indicators update to match the stored data
+#### 情境：紀錄變更後更新標記
+- **當** 使用者新增、編輯或刪除紀錄或提醒
+- **則** 受影響日期的月曆標記會更新，以符合儲存的資料
 
-### Requirement: Identify the selected date
-The system SHALL visually distinguish the selected date and provide a clear way to return to today.
+### 需求：辨識所選日期
+系統必須以視覺方式區分所選日期，並提供明確的返回今天方式。
 
-#### Scenario: Return to today
-- **WHEN** the user activates the today control
-- **THEN** the app selects today's date and displays today's view
+#### 情境：返回今天
+- **當** 使用者啟用今天控制項
+- **則** App 會選取今天並顯示今天的檢視

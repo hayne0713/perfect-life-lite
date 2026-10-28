@@ -1,73 +1,73 @@
-# Design
+# 設計
 
-## Context
+## 背景
 
-The current app is a React/Vite PWA. `src/App.tsx` owns the page, record loading, editing forms, and all three current record areas; `src/data.ts` owns a single IndexedDB database at version 1. Existing tasks contain a date, title, duration, and completion state. Sleep records require both timestamps, so they cannot represent an active sleep timer. There are no existing OpenSpec capability specs.
+目前的 App 使用 React/Vite PWA。`src/App.tsx` 負責頁面、紀錄載入、編輯表單與目前三種紀錄區域；`src/data.ts` 管理單一第 1 版 IndexedDB 資料庫。既有任務包含日期、標題、時長與完成狀態。睡眠紀錄必須同時有開始與結束時間，因此無法表示進行中的睡眠計時。目前沒有 OpenSpec 功能規格。
 
-## Goals / Non-Goals
+## 目標／非目標
 
-**Goals:**
-- Separate the app shell, feature UI, and local persistence so new personal features can be added without expanding one component.
-- Make activity and sleep timing resilient to browser suspension by persisting timestamps, not relying on a continuously running interval.
-- Upgrade local data and backups without discarding existing records.
-- Keep features usable offline and without accounts or a backend.
+**目標：**
+- 拆分 App 外殼、功能 UI 與本機資料持久化邏輯，讓新增個人功能時不必持續擴大單一元件。
+- 將時間戳記存下來，而非依賴持續運作的計時器，讓活動與睡眠計時能承受瀏覽器暫停。
+- 升級本機資料與備份時不遺失既有紀錄。
+- 功能可離線使用，不需要帳號或後端。
 
-**Non-Goals:**
-- Add background notifications, cloud sync, accounts, or native Android background services.
-- Add a standalone prose journal, habit streaks, social features, or predefined activity catalogs.
-- Introduce a generalized plugin framework or state-management library.
+**非目標：**
+- 不新增背景通知、雲端同步、帳號或原生 Android 背景服務。
+- 不新增獨立的文字日記、習慣連勝紀錄、社交功能或預設活動目錄。
+- 不導入通用外掛框架或狀態管理函式庫。
 
-## Decisions
+## 決策
 
-### Use feature-oriented UI modules with a small shared app shell
+### 採用以功能為主的 UI 模組，並維持精簡的共用 App 外殼
 
-Move page-level orchestration into `src/app`, place each capability's view and feature logic under `src/features/<capability>`, and keep shared database setup, date/time helpers, and reusable controls under `src/shared` or `src/data`. The app shell owns selected date, navigation, active timer refresh, and backup/restore; feature modules own their own forms and record presentation.
+將頁面層級的流程移至 `src/app`，每項功能的檢視畫面與邏輯放在 `src/features/<capability>`，共用資料庫設定、日期／時間輔助函式與可重用控制項則放在 `src/shared` 或 `src/data`。App 外殼負責所選日期、導覽、作用中計時器的畫面更新，以及備份／還原；功能模組負責各自的表單與紀錄呈現。
 
-This gives each capability a clear home while staying proportionate to a single-user app. A layered enterprise architecture or plugin registry was considered and rejected because it would add indirection before there are independent teams or third-party extensions.
+這樣能讓每項功能都有明確位置，同時符合單人使用 App 的規模。我們評估過分層的企業級架構與外掛註冊機制，但目前沒有獨立團隊或第三方擴充需求，採用這些設計只會增加間接層次。
 
-### Persist interval timestamps and derive elapsed time
+### 儲存時段時間戳記，並由時間戳記計算經過時間
 
-Store each activity interval as its own record with a free-form trimmed name, start timestamp, and nullable end timestamp. Store an active sleep interval the same way. A shared active-interval rule ensures only one activity or sleep timer is active: starting a new interval closes the previous interval at the same timestamp. Repeated activities remain separate intervals; daily summaries group by exact trimmed name and local date.
+每段活動各自存成一筆紀錄，包含自由輸入且去除首尾空白的名稱、開始時間，以及可為空值的結束時間。進行中的睡眠時段採相同方式儲存。共用的作用中時段規則確保一次只有一段活動或睡眠在進行：開始新時段時，以同一時間點結束上一段。重複活動仍各自保留時段紀錄；每日摘要則依修剪過的完全相同名稱與本地日期分組。
 
-The browser may suspend or discard the page, so the visible clock is only a presentation refresh. IndexedDB retains the start timestamp; elapsed time is derived from that value and the current time whenever the page opens or resumes. An active-page interval updates the display, and a visibility change triggers an immediate refresh. The implementation does not depend on a background JavaScript loop.
+瀏覽器可能暫停或關閉頁面，因此畫面上的時鐘只負責更新顯示。IndexedDB 會保留開始時間；頁面開啟或恢復時，會依該時間與目前時間重新計算經過時間。頁面在前景時定期更新顯示，頁面可見狀態改變時也會立即更新。不依賴背景 JavaScript 迴圈。
 
-Using a conventional continuously incremented counter was considered and rejected because a suspended or terminated page could lose elapsed time. A native foreground service was rejected because it would violate the no-native/no-backend PWA scope.
+我們評估過持續累加計數器，但沒有採用，因為頁面暫停或終止時可能遺失經過時間。也沒有採用原生前景服務，因為這會超出無原生程式／無後端的 PWA 範圍。
 
-### Keep reminders distinct from actual activity intervals
+### 提醒與實際活動時段分開處理
 
-Continue using the existing `tasks` object store for date-based reminders to avoid discarding current task records. New reminders use a title, due date, completion state, and timestamps; the old optional duration field is retained only for reading legacy data and is no longer used for activity totals. The home view shows due-today and overdue incomplete reminders. No OS notification is scheduled.
+為避免捨棄現有任務紀錄，繼續使用既有的 `tasks` 物件儲存區。新提醒包含標題、到期日、完成狀態與時間戳記；舊有選填的時長欄位僅為讀取舊資料而保留，不再用於活動總時間。首頁顯示今天到期與已逾期且未完成的提醒。不排定作業系統通知。
 
-Separate reminder planning from actual activity sessions: a reminder expresses intent; an activity interval records what happened. Automatic linking by title was rejected because it would silently conflate similarly named records.
+將提醒計畫與實際活動分開：提醒代表打算做的事，活動時段則記錄實際發生的事。沒有採用依標題自動連結，避免系統默默混淆名稱相似的紀錄。
 
-### Upgrade IndexedDB in place and version the backup format
+### 原地升級 IndexedDB，並為備份格式加上版本
 
-Increase the database version and add an activity interval object store and indexes needed for date/time queries. Keep the current sleep and task stores so their records survive the upgrade. Represent an active sleep record with a nullable end timestamp. Meal records and embedded compressed photos remain unchanged.
+提高資料庫版本，新增活動時段物件儲存區與日期／時間查詢所需的索引。保留現有睡眠與任務儲存區，確保舊紀錄延續保留。進行中的睡眠紀錄以空值結束時間表示。餐點紀錄與內嵌壓縮照片維持不變。
 
-Export a new versioned backup containing sleep, reminders/tasks, activity intervals, meals, and photos. Import version 1 backups by restoring their existing sleep, task, and meal data and initializing activity intervals as empty. Validate all input before opening the replacement transaction so invalid files cannot partially overwrite local data. The existing confirmation remains in front of replacement.
+匯出新版備份時，納入睡眠、提醒／任務、活動時段、餐點與照片。匯入第 1 版備份時，還原原有睡眠、任務與餐點資料，並將活動時段初始化為空。開啟取代資料的交易之前，先驗證所有輸入，避免無效檔案造成資料只被部分覆寫。沿用既有的取代確認步驟。
 
-### Make the calendar a date selector and record overview
+### 月曆作為日期選擇器與紀錄總覽
 
-Render a local-time monthly grid. Selecting a day updates the shared selected date and all feature views. Small category markers summarize sleep, activity, meal, and reminder presence; selecting a date is never dependent on tapping a marker. Month navigation and a return-to-today control remain available.
+以本地時間顯示月曆格。選取日期會更新共用的所選日期與所有功能檢視。小型分類標記摘要顯示該日是否有活動、睡眠、餐點或提醒；使用者不必點選標記也能選日期。保留月份切換與回到今天的控制項。
 
-### Keep dependencies and runtime behavior small
+### 維持精簡的相依套件與執行行為
 
-Use the existing React, TypeScript, `idb`, and icon dependencies. Do not add a server, push service, or new runtime dependency. Keep the PWA service worker responsible for app-shell caching only; it does not run timers or deliver scheduled reminders.
+沿用既有的 React、TypeScript、`idb` 與圖示相依套件。不新增伺服器、推播服務或執行階段相依套件。PWA service worker 只負責 App 外殼快取，不執行計時器，也不傳送排程提醒。
 
-## Risks / Trade-offs
+## 風險／取捨
 
-- [The OS can suspend the page, so the display will not visibly tick while hidden] → Persist the start timestamp and recompute as soon as the app resumes; the recorded elapsed time does not depend on the display loop.
-- [A user may forget to stop an activity] → Keep active state obvious, allow correction of historical intervals, and close an active interval when another starts.
-- [Legacy tasks contain manually entered durations] → Preserve stored records and their fields during migration/export, but stop counting those durations as completed activity time.
-- [A schema upgrade or import can affect local-only data] → Use an additive IndexedDB upgrade, validate imports before clearing stores, and preserve version 1 import support.
-- [Calendar markers can become visually noisy] → Use compact category dots with a legend and retain a clear selected-day state.
+- **作業系統可能暫停頁面，因此頁面隱藏時畫面上的計時不會持續跳動** → 儲存開始時間，並在 App 恢復時重新計算；紀錄的經過時間不依賴畫面更新迴圈。
+- **使用者可能忘記停止活動** → 清楚呈現作用中狀態，允許修正歷史時段，並在開始另一段時結束目前時段。
+- **舊任務含有手動輸入的時長** → 遷移／匯出時保留已儲存的紀錄與欄位，但不再把這些時長計入已完成活動時間。
+- **結構升級或匯入可能影響僅存於本機的資料** → 以新增方式升級 IndexedDB，清除儲存區前先驗證匯入資料，並持續支援匯入第 1 版備份。
+- **月曆標記可能過於繁雜** → 使用精簡分類點、附上圖例，並清楚標示所選日期。
 
-## Migration Plan
+## 遷移計畫
 
-1. Upgrade IndexedDB additively, keeping current object stores and records.
-2. Deploy the new app shell and feature views; active intervals are restored from their stored timestamps on launch.
-3. Export new backups in the current format while continuing to accept version 1 backups.
-4. If the deployment needs rollback, the previous app can continue reading the original sleep, task, and meal stores; the new activity store is additive and can remain unused.
+1. 以新增方式升級 IndexedDB，保留目前的物件儲存區與紀錄。
+2. 部署新的 App 外殼與功能檢視；App 啟動時依儲存的時間戳記還原作用中時段。
+3. 匯出時使用新版備份格式，同時繼續接受第 1 版檔案。
+4. 若需回復部署，舊版 App 仍可讀取原有的睡眠、任務與餐點儲存區；新增的活動儲存區是額外項目，可暫不使用。
 
-## Open Questions
+## 尚待確認的問題
 
-None. A standalone prose journal was explicitly left for a future change.
+無。獨立的文字日記已明確留待日後變更處理。
